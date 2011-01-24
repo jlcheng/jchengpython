@@ -1,4 +1,4 @@
-#!/Usr/bin/python -uB
+#!/usr/bin/python
 
 """
 A collection of functions to assist with shell scripting.
