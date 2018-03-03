@@ -15,7 +15,7 @@ import (
 //    PASS
 
 
-var _data [10240]int
+var _data = make([]int, 10240)
 var initialized = false
 
 func init() {
@@ -24,30 +24,29 @@ func init() {
 			_data[idx] = idx
 		}
 		initialized = true
-
 	}
 }
 
 
 func BenchmarkRange(b *testing.B) {
-	var i = 0
-	for i < b.N {
+	for n := 0 ;n < b.N; n++ {
 		for idx, _ := range(_data) {
 			_ = idx
 		}
-		i++
+	}
+	if _data[2] != 2 {
+		b.Error("_data was not modified")
 	}
 }
 
 func BenchmarkNoRange(b *testing.B) {
-	var i = 0
-	for i < b.N {
-		j := 0
-		end := len(_data)
-		for j < end {
-			_ = _data[j]
-			j++
+	var end = len(_data)
+	for n := 0; n < b.N; n++ {
+		for idx := 0; idx < end; idx++ {
+			_data[idx] = idx
 		}
-		i++
+	}
+	if _data[2] != 2 {
+		b.Error("_data was not modified")
 	}
 }
