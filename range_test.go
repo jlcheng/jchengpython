@@ -15,38 +15,66 @@ import (
 //    PASS
 
 
-var _data = make([]int, 10240)
-var initialized = false
+var _slice = make([]int, 10240)
+var _array [10240]int
 
-func init() {
-	if !initialized {
-		for idx, _ := range(_data) {
-			_data[idx] = idx
-		}
-		initialized = true
-	}
-}
-
-
-func BenchmarkRange(b *testing.B) {
+func BenchmarkRangeSlice(b *testing.B) {
 	for n := 0 ;n < b.N; n++ {
-		for idx, _ := range(_data) {
-			_ = idx
+		for idx, _ := range(_slice) {
+			_slice[idx] = idx
 		}
 	}
-	if _data[2] != 2 {
-		b.Error("_data was not modified")
+	if _slice[2] != 2 {
+		b.Error("_slice was not modified")
 	}
 }
 
-func BenchmarkNoRange(b *testing.B) {
-	var end = len(_data)
+func BenchmarkResetSlice(b *testing.B) {
+	_slice = make([]int, 10240)
+	if _slice[2] != 0 {
+		b.Error("_slice was not reset")
+	}
+}
+
+func BenchmarkNoRangeSlice(b *testing.B) {
+	var end = len(_slice)
 	for n := 0; n < b.N; n++ {
 		for idx := 0; idx < end; idx++ {
-			_data[idx] = idx
+			_slice[idx] = idx
 		}
 	}
-	if _data[2] != 2 {
-		b.Error("_data was not modified")
+	if _slice[2] != 2 {
+		b.Error("_slice was not modified")
+	}
+}
+
+func BenchmarkRangeArray(b *testing.B) {
+	for n := 0 ;n < b.N; n++ {
+		for idx, _ := range(_array) {
+			_array[idx] = idx
+		}
+	}
+	if _array[2] != 2 {
+		b.Error("_array was not modified")
+	}
+}
+
+func BenchmarkResetArray(b *testing.B) {
+	_array = [10240]int{}
+	if _array[2] != 0 {
+		b.Error("_array was not reset")
+	}
+}
+
+
+func BenchmarkNoRangeArray(b *testing.B) {
+	var end = len(_array)
+	for n := 0; n < b.N; n++ {
+		for idx := 0; idx < end; idx++ {
+			_array[idx] = idx
+		}
+	}
+	if _array[2] != 2 {
+		b.Error("_array was not modified")
 	}
 }
